@@ -15,22 +15,22 @@ for line in fileinput.input():
     import numpy as np
 
     def hill_cipher_encryption(plaintext, key):
-        # Convert plaintext and key to uppercase
+        # Convertir el texto plano y la clave a mayúsculas
         plaintext = plaintext.upper()
         key = key.upper()
 
-        # Remove any non-alphabetic characters from plaintext
+        # Eliminar cualquier carácter no alfabético del texto plano
         plaintext = ''.join(filter(str.isalpha, plaintext))
 
-        # Pad the plaintext if its length is not a multiple of the key size
+        # Rellenar el texto plano si su longitud no es un múltiplo del tamaño de la clave
         if len(plaintext) % len(key) != 0:
             plaintext += 'X' * (len(key) - len(plaintext) % len(key))
 
-        # Create the key matrix
+        # Crear la matriz clave
         key_matrix = np.array([ord(c) - ord('A') for c in key])
         key_matrix = key_matrix.reshape(int(len(key_matrix) ** 0.5), -1)
 
-        # Encrypt the plaintext using the key matrix
+        # Cifrar el texto plano usando la matriz clave
         ciphertext = ''
         for i in range(0, len(plaintext), len(key)):
             block = np.array([ord(c) - ord('A') for c in plaintext[i:i+len(key)]])
@@ -41,23 +41,23 @@ for line in fileinput.input():
         return ciphertext
 
     def hill_cipher_decryption(ciphertext, key):
-        # Convert ciphertext and key to uppercase
+        # Convertir el texto cifrado y la clave a mayúsculas
         ciphertext = ciphertext.upper()
         key = key.upper()
 
-        # Remove any non-alphabetic characters from ciphertext
+        # Eliminar cualquier carácter no alfabético del texto cifrado
         ciphertext = ''.join(filter(str.isalpha, ciphertext))
 
-        # Create the key matrix
+        # Crear la matriz clave
         key_matrix = np.array([ord(c) - ord('A') for c in key])
         key_matrix = key_matrix.reshape(int(len(key_matrix) ** 0.5), -1)
 
-        # Calculate the inverse of the key matrix
+        # Calcular la inversa de la matriz clave
         det = np.linalg.det(key_matrix)
         det_inv = pow(int(round(det)) % 26, -1, 26)
         key_matrix_inv = (det_inv * np.round(det * np.linalg.inv(key_matrix)) % 26).astype(int)
 
-        # Decrypt the ciphertext using the inverse key matrix
+        # Descifrar el texto cifrado usando la matriz clave inversa
         plaintext = ''
         for i in range(0, len(ciphertext), len(key)):
             block = np.array([ord(c) - ord('A') for c in ciphertext[i:i+len(key)]])
@@ -67,17 +67,17 @@ for line in fileinput.input():
 
         return plaintext
 
-    # Read the input from the file
+   # Leer la entrada del archiv
     input_lines = lines[:-1]
     mode = input_lines[0].strip()
     text = input_lines[1].strip()
     key = input_lines[2].strip()
 
-    # Perform encryption or decryption based on the mode
+    # Realizar cifrado o descifrado según el modo
     if mode == 'c':
         result = hill_cipher_encryption(text, key)
     else:
         result = hill_cipher_decryption(text, key)
 
-    # Print the result
+    # Imprimir el resultado
     print(result)
