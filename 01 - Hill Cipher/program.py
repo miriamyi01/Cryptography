@@ -4,16 +4,30 @@
 #Facultad de Ingeniería
 #Universidad Nacional Autónoma de México
 
-'''import fileinput
+# Leer líneas de una entrada estándar y almacenarlas en una lista
+import fileinput
 
 lines = []
 for line in fileinput.input():
-    lines.append(line)'''
+    lines.append(line)
 
-with open('C:\\Users\\miria\\Desktop\\prueba.txt', 'r') as file:
-    lines = file.readlines()
+# Leer archivo de pruebas local
+# with open('C:\\Users\\miria\\Desktop\\prueba.txt', 'r') as file:
+#    lines = file.readlines()
 
+# Implemantación del cifrado de Hill
 def hill_cipher_encryption(plaintext, key):
+    """
+    Realiza el cifrado Hill de un texto plano utilizando una clave dada.
+
+    Parámetros:
+    - plaintext: El texto plano a cifrar.
+    - key: La clave para el cifrado.
+
+    Regresa:
+    - El texto cifrado resultante.
+    """
+        
     # Convertir el texto plano y la clave a mayúsculas
     plaintext = plaintext.upper()
     key = key.upper()
@@ -72,7 +86,19 @@ def hill_cipher_encryption(plaintext, key):
     return ciphertext
 
 
+# Implemantación del descifrado de Hill
 def hill_cipher_decryption(ciphertext, key):
+    """
+    Realiza el descifrado Hill de un texto cifrado utilizando una clave dada.
+
+    Parámetros:
+    - ciphertext: El texto cifrado a descifrar.
+    - key: La clave para el descifrado.
+
+    Regresa:
+    - El texto plano resultante.
+    """
+
     # Convertir el texto cifrado y la clave a mayúsculas
     ciphertext = ciphertext.upper()
     key = key.upper()
@@ -80,7 +106,56 @@ def hill_cipher_decryption(ciphertext, key):
     # Eliminar cualquier carácter no alfabético del texto cifrado
     ciphertext = ''.join(filter(str.isalpha, ciphertext))
 
+    # Definir los vectores de texto cifrado
+    ciphertext_vectors = [[ord(c) - 65 for c in ciphertext[i:i+2]] for i in range(0, len(ciphertext), 2)]
 
+    # Convertir la clave en una matriz clave numérica de 2x2
+    key_matrix = [[ord(key[0]) - 65, ord(key[1]) - 65],
+                  [ord(key[2]) - 65, ord(key[3]) - 65]]
+    
+    # Imprimir la matriz clave
+    # print("Matriz clave:")
+    # for row in key_matrix:
+    #    print(row)
+    
+    # Calcular el determinante de la matriz clave
+    det = (key_matrix[0][0] * key_matrix[1][1] - key_matrix[0][1] * key_matrix[1][0]) % 26
+    #print(det)
+
+    # Comprobar si el determinante tiene un inverso multiplicativo en módulo 26
+    for i in range(26):
+        if (det * i) % 26 == 1:
+            det_inv = i
+            break
+    else:
+        raise ValueError("La matriz clave no es invertible")
+
+    # Calcular la matriz adjunta de la matriz clave
+    adj = [[key_matrix[1][1], -key_matrix[0][1]], [-key_matrix[1][0], key_matrix[0][0]]]
+    #print(adj)
+
+    # Multiplicar cada elemento de la matriz adjunta por el inverso multiplicativo del determinante en módulo 26
+    inv_key_matrix = [[(det_inv * adj[i][j]) % 26 for j in range(2)] for i in range(2)]
+    print(inv_key_matrix)
+
+    # Multiplicar la matriz clave inversa por cada vector de texto cifrado para obtener los vectores de texto plano
+    plaintext_vectors = []
+    for vector in ciphertext_vectors:
+        result_vector = [0, 0]
+        for i in range(2):
+            for j in range(2):
+                result_vector[i] += inv_key_matrix[j][i] * vector[j]
+            result_vector[i] %= 26
+        plaintext_vectors.append(result_vector)
+    print("Vectores de la multiplicación de matrices: ", plaintext_vectors)
+
+    # Convertir los vectores de texto plano a texto para obtener el texto plano final
+    plaintext = ""
+    for vector in plaintext_vectors:
+        for i in vector:
+            plaintext += chr(i + 65)  # Convertir de número a letra
+
+    # Devolver el texto plano
     return plaintext
 
 
