@@ -1,8 +1,8 @@
-#Reyes Mendoza Miriam Guadalupe
-#Criptografía - Grupo 2
-#Semestre 2024-2
-#Facultad de Ingeniería
-#Universidad Nacional Autónoma de México
+# Reyes Mendoza Miriam Guadalupe
+# Criptografía - Grupo 2
+# Semestre 2024-2
+# Facultad de Ingeniería
+# Universidad Nacional Autónoma de México
 
 # Leer líneas de una entrada estándar y almacenarlas en una lista
 import fileinput
