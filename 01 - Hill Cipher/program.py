@@ -4,6 +4,8 @@
 # Facultad de Ingeniería
 # Universidad Nacional Autónoma de México
 
+# PRACTICAL SESSION 1 - HILL CIPHER
+
 # Leer líneas de una entrada estándar y almacenarlas en una lista
 import fileinput
 
