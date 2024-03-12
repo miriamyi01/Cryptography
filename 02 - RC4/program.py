@@ -35,7 +35,7 @@ def rc4(plaintext, key):
     S = list(range(256))
     j = 0
     keylength = len(key)
-    for i in range(255):
+    for i in range(256):
         j = (j + S[i] + ord(key[i % keylength])) % 256
         S[i], S[j] = S[j], S[i]
 
